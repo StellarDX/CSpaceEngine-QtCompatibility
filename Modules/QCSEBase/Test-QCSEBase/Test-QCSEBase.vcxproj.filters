@@ -23,19 +23,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="QCSEDateTime.cc">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="QCSELinearAlgebra.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="QDebugCompat.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\Headers\CSE\QCSEBase.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+
   </ItemGroup>
 </Project>

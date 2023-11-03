@@ -30,18 +30,19 @@
 #include <QGenericMatrix.h>
 #include <QDateTime.h>
 #include <QTimezone.h>
+#include <QDebug.h>
 #include <CSE/Core/gltypes.h>
 #include <CSE/Core/DateTime.h>
 
-#ifndef BUILD_STATIC
-# if defined(QCSEBASE_LIB)
-#  define QCSEBASE_EXPORT Q_DECL_EXPORT
-# else
-#  define QCSEBASE_EXPORT Q_DECL_IMPORT
-# endif
-#else
-# define QCSEBASE_EXPORT
-#endif
+//#ifndef BUILD_STATIC
+//#if defined(QCSEBASE_LIB)
+//#define QCSEBASE_EXPORT Q_DECL_EXPORT
+//#else
+//#define QCSEBASE_EXPORT Q_DECL_IMPORT
+//#endif
+//#else
+#define QCSEBASE_EXPORT
+//#endif
 
 _CSE_BEGIN
 
@@ -165,12 +166,64 @@ _TIME CSETime QCSEBASE_EXPORT ToCSEType(QTime Time);
 /// Convert CSE type to compatable Qt type
 /// </summary>
 /// <param name="ConvertMethod">0 = using timezone, 1 = using offset seconds</param>
-QDateTime QCSEBASE_EXPORT ToQType(CSEDateTime DateTime, int ConvertMethod = 0);
+QDateTime QCSEBASE_EXPORT ToQType(CSEDateTime DateTime, int ConvertMethod = 1);
 /// <summary>
 /// Convert CSE type to compatable Qt type
 /// </summary>
 /// <param name="ConvertMethod">0 = using timezone, 1 = using offset seconds</param>
-CSEDateTime QCSEBASE_EXPORT ToCSEType(QDateTime DateTime, int ConvertMethod = 0);
+CSEDateTime QCSEBASE_EXPORT ToCSEType(QDateTime DateTime, int ConvertMethod = 1);
+
+/*--------------------------------------------------------------------------------*\
+|                               QDebug Compatibility                               |
+\*--------------------------------------------------------------------------------*/
+
+template<typename genType>
+QDebug operator<<(QDebug dbg, _GL gl_vec2<genType> vector)
+{
+    QDebugStateSaver saver(dbg);
+    dbg.nospace() << "cse::gl::gl_vec2<" << QMetaType::fromType<genType>().name() << ">(" << vector.x << ", " << vector.y << ')';
+    return dbg;
+}
+
+template<typename genType>
+QDebug operator<<(QDebug dbg, _GL gl_vec3<genType> vector)
+{
+    QDebugStateSaver saver(dbg);
+    dbg.nospace() << "cse::gl::gl_vec3<" << QMetaType::fromType<genType>().name() << ">("
+        << vector.x << ", " << vector.y << ", " << vector.z << ')';
+    return dbg;
+}
+
+template<typename genType>
+QDebug operator<<(QDebug dbg, _GL gl_vec4<genType> vector)
+{
+    QDebugStateSaver saver(dbg);
+    dbg.nospace() << "cse::gl::gl_vec4<" << QMetaType::fromType<genType>().name() << ">("
+        << vector.x << ", " << vector.y << ", "
+        << vector.z << ", " << vector.w << ')';
+    return dbg;
+}
+
+template<typename T, int N, int M>
+QDebug operator<<(QDebug dbg, const cse::gl::basic_matrix<T, N, M>& m) // Output like Qt matrix
+{
+    QDebugStateSaver saver(dbg);
+    dbg.nospace() 
+        << "cse::gl::basic_matrix<" << N << ", " << M
+        << ", " << QMetaType::fromType<T>().name()
+        << ">\n(" << '\n' << qSetFieldWidth(10);
+    for (int row = 0; row < M; ++row)
+    {
+        for (int col = 0; col < N; ++col) { dbg << m[row][col]; }
+        dbg << '\n';
+    }
+    dbg << qSetFieldWidth(0) << ')';
+    return dbg;
+}
+
+QDebug operator<<(QDebug dbg, _TIME CSEDate date);
+QDebug operator<<(QDebug dbg, _TIME CSETime time);
+QDebug operator<<(QDebug dbg, const CSEDateTime& date);
 
 _CSE_END
 
