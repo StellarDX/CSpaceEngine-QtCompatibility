@@ -1,5 +1,5 @@
 <h1>Qt Compatibility for CSpaceEngine</h1>
-
+<p>A compatibility pack between CSpaceEngine and Qt</p>
 <h2>System requirements</h2>
 <ul>
 	<li>CSpaceEngine</li>
